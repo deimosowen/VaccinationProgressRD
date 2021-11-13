@@ -1,0 +1,196 @@
+﻿@page
+@model IndexModel
+@{
+    Layout = null;
+    ViewData["Title"] = "Уровень вакцинации по муниципальным районам и городам Республики Дагестан ";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/icons.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/app.min.css" rel="stylesheet" type="text/css" />
+    <link href="~/css/site.css" rel="stylesheet"/>
+</head>
+<body class="p-0">
+    <div id="wrapper" class="m-auto" style="/* width: 1200px; */">
+        <!-- Content Start -->
+        <div class="">
+            <div class="content">
+                <div class="container-fluid p-0">
+                    <main role="main" class="">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card-box m-0">
+                                    <div class="row mt-0">
+                                        <div class="col-12">
+                                            <h3 class="text-center mt-1">
+                                                @ViewData["Title"]
+                                            </h3>
+                                            <h4 class="text-center pb-3">
+                                                по состоянию на @DateTime.Today.ToShortDateString()
+                                            </h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-xl-6">
+                                            <div id="someId"></div>
+                                        </div>
+                                        <div class="col-6" style="overflow-y: auto; height: 750px;">
+                                            <table class="table table-hover table-centered mb-0 table-sm" id="table-regions">
+                                                <thead style="font-size: 12px;">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Муниципалитет</th>
+                                                        <th>Подлежащих вакцинированию, кол.</th>
+                                                        <th>Выделено вакцин, кол.</th>
+                                                        <th>Вакцинировано кол.</th>
+                                                        <th>Вакцинировано %</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody style="font-size: 13px;">
+                                                    @if (Model.ViewModel.RegionsData.Any())
+                                                    {
+                                                        @foreach (var item in Model.ViewModel.RegionsData)
+                                                        {
+                                                            <tr data-path='{"id":"@item.Path", "name":"@item.Municipality"}' data-indicator-value="@item.VaccinatedPercent">
+                                                                <td class="pt-0 pb-0">@(item.Id)</td>
+                                                                <td class="pt-0 pb-0">
+                                                                    @item.Municipality
+                                                                </td>
+                                                                <td class="pt-0 pb-0">
+                                                                    @(item.Vaccinated)
+                                                                </td>
+                                                                <td class="pt-0 pb-0">
+                                                                    @(item.HighlightedVaccines)
+                                                                </td>
+                                                                <td class="pt-0 pb-0">
+                                                                    @(item.VaccinatedQuantity)
+                                                                </td>
+                                                                <td class="pt-0 pb-0">
+                                                                    @(item.VaccinatedPercent)
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <tr>
+                                                            <td colspan="4" class="text-center text-muted">Нет данных</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </main>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="tooltip" class="tooltip fade bs-tooltip-top show" style="display: none;"><div class="tooltip-inner">test</div></div>
+    <script src="~/js/vendor.min.js"></script>
+    <script src="~/js/plugins/svg.js/svg.min.js"></script>
+    <script type="text/javascript">
+        var mouseX;
+        var mouseY;
+
+        $(document).mousemove(function (e) {
+            mouseX = e.pageX;
+            mouseY = e.pageY;
+        });
+        function colorMap() {
+            $('[data-indicator-value]').map(function (j, el) {
+                var $el = $(el),
+                    data = $el.data('path'),
+                    value = parseFloat($el.data('indicator-value')),
+                    $path = $(`#${data.id}`),
+                    rules = [{
+                        start: 20.99,
+                        stop: 0,
+                        color: '#ff0000'
+                    }, {
+                        start: 40.99,
+                        stop: 21,
+                        color: '#ffc0cb'
+                    }, {
+                        start: 60.99,
+                        stop: 41,
+                        color: '#ccffcc'
+                    }, {
+                        start: 100,
+                        stop: 61,
+                        color: '#00ff00'
+                    }];
+                for (let i = 0; i < rules.length; i++) {
+                    if (parseFloat(rules[i].start) >= value && value >= parseFloat(rules[i].stop))
+                        $path.attr("fill", `${rules[i].color}`);
+                }
+            });
+        }
+        var draw = SVG().addTo('#someId').size('100%', '100%');
+        var cl = '';
+        draw.svg(getSVG(), false);
+        draw.size(744.1, 800);
+        draw.each(function (i, children) {
+            if (this.type === "path") {
+                var c = '';
+                this.fill({ color: 'rgb(254, 254, 233);' });
+                this.mouseover(function () {
+                    c = this.fill();
+                    this.fill({ color: '#39afd1' });
+                    this.mousemove(function () {
+                        $('#tooltip').css({ 'top': mouseY - 60, 'left': mouseX + 20 });
+                    });
+                }).mouseout(function () {
+                    this.fill({ color: c });
+                });
+            }
+        }, true);
+        $('[data-path]').map(function (i, el) {
+            var $el = $(el),
+                data = $el.data('path'),
+                value = $el.data('indicator-value') ? `</br>${$el.data('indicator-value')}%` : "",
+                $path = $(`#${data.id}`);
+            $el.hover(function () {
+                cl = $path.attr("fill");
+                $path.attr("fill", "#39afd1").attr("fill-opacity", 0.8);
+            }, function () {
+                $path.attr("fill", cl).attr("fill-opacity", 1);
+            });
+            $path.hover(function () {
+                $path.attr("fill-opacity", 0.8);
+                $el.addClass("active");
+                $('#tooltip').stop(false, true).fadeIn(1);
+                $('#tooltip div').html(`${data.name} ${value}`);
+
+            }, function () {
+                $path.attr("fill-opacity", 1);
+                $el.removeClass("active");
+                $('#tooltip').stop(false, true).fadeOut('slow');
+            });
+        });
+        function getSVG() {
+            var result = null;
+            $.ajax({
+                url: '/images/dagestan_location_map.svg',
+                type: 'get',
+                dataType: 'text',
+                async: false,
+                success: function (data) {
+                    result = data;
+                }
+            });
+            return result;
+        }
+        colorMap();
+    </script>
+</body>
+</html>

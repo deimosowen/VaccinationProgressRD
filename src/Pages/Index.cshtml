@@ -14,7 +14,7 @@
     <link href="~/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <link href="~/css/icons.min.css" rel="stylesheet" type="text/css" />
     <link href="~/css/app.min.css" rel="stylesheet" type="text/css" />
-    <link href="~/css/site.css" rel="stylesheet"/>
+    <link href="~/css/site.css" rel="stylesheet" />
 </head>
 <body class="p-0">
     <div id="wrapper" class="m-auto" style="/* width: 1200px; */">
@@ -71,7 +71,7 @@
                                                                 <td class="pt-0 pb-0">
                                                                     @(item.VaccinatedQuantity)
                                                                 </td>
-                                                                <td class="pt-0 pb-0">
+                                                                <td class="pt-0 pb-0 font-weight-bold">
                                                                     @(item.VaccinatedPercent)
                                                                 </td>
                                                             </tr>
@@ -125,9 +125,13 @@
                         stop: 41,
                         color: '#ccffcc'
                     }, {
-                        start: 100,
+                        start: 79.99,
                         stop: 61,
                         color: '#00ff00'
+                    }, {
+                        start: 900,
+                        stop: 80,
+                        color: '#009e00'
                     }];
                 for (let i = 0; i < rules.length; i++) {
                     if (parseFloat(rules[i].start) >= value && value >= parseFloat(rules[i].stop))

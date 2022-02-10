@@ -24,10 +24,10 @@ namespace VaccinationProgressRD.Services
                 {
                     Id = id,
                     Municipality = nodes.ElementAt(1).InnerText,
-                    Vaccinated = Regex.Replace(nodes.ElementAt(2).InnerText, @"\s(\.[\d]+)?", ""),
-                    HighlightedVaccines = Regex.Replace(nodes.ElementAt(3).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
-                    VaccinatedQuantity = Regex.Replace(nodes.ElementAt(4).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
-                    VaccinatedPercent = Regex.Replace(nodes.ElementAt(5).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
+                    Vaccinated = Regex.Replace(nodes.ElementAt(3).InnerText, @"\s(\.[\d]+)?", ""),
+                    HighlightedVaccines = Regex.Replace(nodes.ElementAt(4).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
+                    VaccinatedQuantity = Regex.Replace(nodes.ElementAt(5).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
+                    VaccinatedPercent = Regex.Replace(nodes.ElementAt(6).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
                     Path = RegionSvgDictionary.GetPathByIndex(id - 1)
                 }).ToList();
         }

@@ -27,7 +27,7 @@ namespace VaccinationProgressRD.Services
                     Vaccinated = Regex.Replace(nodes.ElementAt(3).InnerText, @"\s(\.[\d]+)?", ""),
                     HighlightedVaccines = Regex.Replace(nodes.ElementAt(4).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
                     VaccinatedQuantity = Regex.Replace(nodes.ElementAt(5).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
-                    VaccinatedPercent = Regex.Replace(nodes.ElementAt(6).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
+                    VaccinatedPercent = Regex.Replace(nodes.ElementAt(8).ChildNodes[0].InnerText, @"\s(\.[\d]+)?", ""),
                     Path = RegionSvgDictionary.GetPathByIndex(id - 1)
                 }).ToList();
         }
